@@ -1,0 +1,12 @@
+{
+  "name": "wifi-guard",
+  "version": "1.0.0",
+  "description": "WiFi Guard - Huawei + TP-Link - Iraq",
+  "scripts": {
+    "build": "echo build done"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/core": "^6.1.0"
+  }
+}

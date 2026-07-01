@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WiFi Guard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+body{background:#0b1a2f;color:#fff;min-height:100vh}
+.container{max-width:420px;margin:0 auto;padding:24px}
+.logo{text-align:center;margin:40px 0 20px}
+.logo-icon{width:72px;height:72px;background:#00c2a8;border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:32px}
+h1{text-align:center;font-size:26px;margin-bottom:8px}
+.subtitle{text-align:center;color:#9ab;font-size:14px;margin-bottom:32px;line-height:1.6}
+.card{background:#152841;border-radius:20px;padding:24px;margin-bottom:16px}
+label{font-size:13px;color:#9ab;display:block;margin-bottom:8px}
+input,select{width:100%;background:#0b1a2f;border:1px solid #2a3f5a;color:#fff;border-radius:12px;padding:14px;font-size:15px;margin-bottom:12px}
+input::placeholder{color:#5a6d85}
+.btn{width:100%;background:#7df8e6;color:#00332b;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:700;cursor:pointer}
+.btn:hover{opacity:.9}
+.hint{font-size:12px;color:#7a8ca3;text-align:center;margin-top:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.stat{background:#152841;border-radius:18px;padding:18px}
+.stat-label{font-size:13px;color:#9ab}
+.stat-value{font-size:28px;font-weight:700;margin:6px 0}
+.stat-sub{font-size:12px;color:#7a8ca3}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#152841;border-top:1px solid #2a3f5a;display:flex;justify-content:space-around;padding:12px 0;max-width:420px;margin:0 auto}
+.nav span{font-size:12px;color:#9ab}
+.nav .active{color:#7df8e6}
+.hidden{display:none}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:13px;color:#9ab}
+.badge{background:#00c2a8;color:#00332b;padding:4px 10px;border-radius:20px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="container" id="activation-view">
+  <div class="logo"><div class="logo-icon">🛡️</div></div>
+  <h1>WiFi Guard</h1>
+  <p class="subtitle">تحكم كامل براوترك من موبايلك<br>سريع، آمن، وباللهجة العراقية</p>
+  <div class="card">
+    <label>كود التفعيل</label>
+    <input id="code" placeholder="BG-XXXX-XXXX" />
+    <label>نوع الراوتر</label>
+    <select id="router">
+      <option value="huawei">Huawei</option>
+      <option value="tplink">TP-Link</option>
+    </select>
+    <button class="btn" onclick="activate()">⚡ تفعيل الآن</button>
+    <p class="hint">الكود تلگاه بالكارت أو برسالة الواتساب<br>الصيغة: BG-XXXX-XXXX</p>
+  </div>
+</div>
+
+<div class="container hidden" id="dashboard-view">
+  <div class="topbar">
+    <span id="router-badge" class="badge">Huawei • متصل</span>
+    <span>WiFi Guard 🛡️</span>
+  </div>
+  <h1>👋 هلا بيك حيدر</h1>
+  <p class="subtitle">كل شي تمام، الشبكة مستقرة.</p>
+  
+  <div class="grid">
+    <div class="stat">
+      <div class="stat-label">الأجهزة المتصلة</div>
+      <div class="stat-value" style="color:#7df8e6">6</div>
+      <div class="stat-sub">جهاز نشط حالياً</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">المحظورة</div>
+      <div class="stat-value">2</div>
+      <div class="stat-sub">بالقائمة السوداء</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">قوة الإشارة</div>
+      <div class="stat-value" style="font-size:22px">ممتازة</div>
+      <div class="stat-sub">2.4G + 5G</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">مدة التفعيل</div>
+      <div class="stat-value" style="font-size:22px">دائمي</div>
+      <div class="stat-sub">مرخص</div>
+    </div>
+  </div>
+
+  <h3 style="margin:16px 0">إجراءات سريعة</h3>
+  <div class="grid">
+    <div class="stat" style="text-align:center">🚫<br>حظر جهاز</div>
+    <div class="stat" style="text-align:center">🔒<br>تغيير باسوورد الواي فاي</div>
+  </div>
+  <div style="height:80px"></div>
+  <div class="nav">
+    <span class="active">🏠<br>الرئيسية</span>
+    <span>📱<br>الأجهزة</span>
+    <span onclick="showSettings()">⚙️<br>الإعدادات</span>
+  </div>
+</div>
+
+<div class="container hidden" id="settings-view">
+  <h1 style="margin-top:30px">الإعدادات</h1>
+  <div class="card" style="margin-top:20px">
+    <label>نوع الراوتر</label>
+    <select id="router-setting" onchange="changeRouter(this.value)">
+      <option value="huawei">Huawei - 192.168.100.1</option>
+      <option value="tplink">TP-Link - 192.168.0.1</option>
+    </select>
+    <label>IP الراوتر</label>
+    <input id="router-ip" value="192.168.100.1" />
+    <label>يوزر الأدمن</label>
+    <input id="router-user" value="admin" />
+    <label>باسوورد الأدمن</label>
+    <input id="router-pass" type="password" placeholder="••••••••" />
+    <button class="btn" onclick="saveSettings()">حفظ</button>
+  </div>
+  <button onclick="backToDash()" style="background:none;border:none;color:#9ab;width:100%;padding:16px;cursor:pointer">رجوع للرئيسية</button>
+</div>
+
+<script>
+const profiles = {
+  huawei: {ip:'192.168.100.1', user:'admin', name:'Huawei'},
+  tplink: {ip:'192.168.0.1', user:'admin', name:'TP-Link'}
+};
+function activate(){
+  const code = document.getElementById('code').value;
+  const router = document.getElementById('router').value;
+  localStorage.setItem('wg_router', router);
+  document.getElementById('activation-view').classList.add('hidden');
+  document.getElementById('dashboard-view').classList.remove('hidden');
+  document.getElementById('router-badge').textContent = profiles[router].name + ' • متصل';
+  applyRouter(router);
+}
+function showSettings(){
+  document.getElementById('dashboard-view').classList.add('hidden');
+  document.getElementById('settings-view').classList.remove('hidden');
+}
+function backToDash(){
+  document.getElementById('settings-view').classList.add('hidden');
+  document.getElementById('dashboard-view').classList.remove('hidden');
+}
+function changeRouter(v){
+  document.getElementById('router-ip').value = profiles[v].ip;
+  document.getElementById('router-user').value = profiles[v].user;
+  document.getElementById('router-badge').textContent = profiles[v].name + ' • متصل';
+}
+function saveSettings(){ alert('تم الحفظ'); backToDash(); }
+function applyRouter(r){ 
+  document.getElementById('router-setting').value = r;
+  changeRouter(r);
+}
+</script>
+</body>
+</html>

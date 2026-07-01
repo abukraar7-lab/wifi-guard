@@ -1,0 +1,8 @@
+{
+  "appId": "com.wifiguard.iq",
+  "appName": "WiFi Guard",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
